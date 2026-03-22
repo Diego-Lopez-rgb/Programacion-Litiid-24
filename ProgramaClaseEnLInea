@@ -1,0 +1,134 @@
+using System;
+
+namespace ClaseLinea
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int cantidadPersonas = ObtenerCantidadPersonas();
+
+            string[] nombres = new string[cantidadPersonas];
+            int[] edades = new int[cantidadPersonas];
+
+            LlenarDatos(nombres, edades, 0);
+
+            // Preguntar si desea agregar más personas
+            while (PreguntarSiAgregar())
+            {
+                int cantidadExtra = ObtenerCantidadPersonas();
+
+                int tamañoActual = nombres.Length;
+                int nuevoTamaño = tamañoActual + cantidadExtra;
+
+                // Crear nuevos arreglos
+                string[] nuevosNombres = new string[nuevoTamaño];
+                int[] nuevasEdades = new int[nuevoTamaño];
+
+                // Copiar datos anteriores
+                for (int i = 0; i < tamañoActual; i++)
+                {
+                    nuevosNombres[i] = nombres[i];
+                    nuevasEdades[i] = edades[i];
+                }
+
+                // Asignar nuevos arreglos
+                nombres = nuevosNombres;
+                edades = nuevasEdades;
+
+                // Llenar nuevas posiciones
+                LlenarDatos(nombres, edades, tamañoActual);
+            }
+
+            MostrarResultados(nombres, edades);
+        }
+
+        static void LlenarDatos(string[] nombres, int[] edades, int inicio)
+        {
+            for (int i = inicio; i < nombres.Length; i++)
+            {
+                Console.WriteLine($"\nPersona #{i + 1}");
+
+                Console.Write("Nombre: ");
+                nombres[i] = Console.ReadLine();
+
+                edades[i] = ObtenerEdad();
+            }
+        }
+
+        static bool PreguntarSiAgregar()
+        {
+            Console.Write("\n¿Desea registrar más personas? (s/n): ");
+            string respuesta = Console.ReadLine().ToLower();
+
+            return respuesta == "s";
+        }
+
+        static int ObtenerCantidadPersonas()
+        {
+            int cantidad;
+
+            while (true)
+            {
+                Console.Write("Ingrese la cantidad de personas (minimo 1): ");
+                string input = Console.ReadLine();
+
+                if (int.TryParse(input, out cantidad) && cantidad >= 1)
+                {
+                    return cantidad;
+                }
+                else
+                {
+                    Console.WriteLine("Entrada inválida. Debe ser un número entero mayor a o igual a 1. \n");
+                }
+            }
+        }
+
+        static int ObtenerEdad()
+        {
+            int edad;
+
+            while (true)
+            {
+                Console.Write("Edad: ");
+                string input = Console.ReadLine();
+
+                if (int.TryParse(input, out edad) && edad >= 0)
+                {
+                    return edad;
+                }
+                else
+                {
+                    Console.WriteLine("Edad inválida. Ingrese un número entero válido.");
+                }
+            }
+        }
+
+        static void MostrarResultados(string[] nombres, int[] edades)
+        {
+            Console.WriteLine("\n==================================");
+            Console.WriteLine("\nLista General:");
+
+            for (int i = 0; i < nombres.Length; i++)
+            {
+                Console.WriteLine($"{nombres[i]} - {edades[i]} años");
+            }
+
+            Console.WriteLine("\nMayores de edad:");
+            for (int i = 0; i < nombres.Length; i++)
+            {
+                if (edades[i] >= 18)
+                    Console.WriteLine($"{nombres[i]} - {edades[i]} años");
+            }
+
+            Console.WriteLine("\nMenores de edad:");
+            for (int i = 0; i < nombres.Length; i++)
+            {
+                if (edades[i] < 18)
+                    Console.WriteLine($"{nombres[i]} - {edades[i]} años");
+            }
+
+            Console.WriteLine("\nPrograma finalizado.");
+        }
+    }
+}
